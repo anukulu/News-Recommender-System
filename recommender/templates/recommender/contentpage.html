@@ -1,0 +1,12 @@
+{% if newsContent %}
+	<p>{{ newsContent }}</p>
+{% endif %}
+
+<h1>Recommended News:</h1><br/><br/>
+{% if recommendations %}
+	{% for newsItem in recommendations %}
+		<li><a href="{% url 'contentPage' newsItem.index %}">{{ newsItem.topic }}</a></li>
+	{% endfor %}
+{% else %}
+	<p>This is printed</p>
+{% endif %}
