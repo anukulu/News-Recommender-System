@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('news/<int:newsId>/', views.content, name='contentPage'),
+    path('news/<str:category>/<int:newsId>/', views.content, name='contentPage'),	#categoryAndId = category/id
 ]

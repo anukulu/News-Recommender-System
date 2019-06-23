@@ -1,3 +1,6 @@
+{% if newsTopic %}
+	<h2>{{ newsTopic }}</h2><br/>
+{% endif %}
 {% if newsContent %}
 	<p>{{ newsContent }}</p>
 {% endif %}
@@ -5,8 +8,13 @@
 <h1>Recommended News:</h1><br/><br/>
 {% if recommendations %}
 	{% for newsItem in recommendations %}
-		<li><a href="{% url 'contentPage' newsItem.index %}">{{ newsItem.topic }}</a></li>
+		<li><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></li>
 	{% endfor %}
 {% else %}
 	<p>This is printed</p>
+{% endif %}
+{% if maxCategory %}
+	<p>{{ maxCategory }}</p>
+{% else %}
+	<p>There is nothing!!</p>
 {% endif %}

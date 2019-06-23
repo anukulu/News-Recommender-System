@@ -2,7 +2,7 @@
 {% block content %}
 {% if newsAndTopics %}
 	{% for newsItem in newsAndTopics %}
-		<li><a href="news/{{ newsItem.index }}">{{ newsItem.topic }}</a></li>
+		<li><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></li>
 	{% endfor %}
 {% else %}
 	<p>This is printed</p>
