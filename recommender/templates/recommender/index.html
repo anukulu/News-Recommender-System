@@ -1,11 +1,63 @@
-<h1>This page is loading...!!!</h1>
+<html>
+<head>
+<style>
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 200px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+  width: 160px;
+  height: 100px;
+}
+a {
+	text-decoration: none;
+	color: black;
+}
+.some {
+    margin:; 10px;
+    clear: both;
+    /*border: 1px solid #ccc;*/
+    /*float: left;*/
+}
+</style>
+</head>
+<body>
+	<h2><a href="{% url 'index' %}">Home</a></h2>
+	<h1>Personalized News Recommendation System</h1>
 {% block content %}
-{% if newsAndTopics %}
-	{% for newsItem in newsAndTopics %}
-		<li><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></li>
-	{% endfor %}
+{% if newsAndTopics2 %}
+	{% for category, allNews in newsAndTopics2.items %}
+    <div class="some">
+      <h3>{{ category }}</h3>
+      <div class="{{ category }}" style="width: 100%; background-color: black; ">
+        {% for newsItem in allNews %}
+    
+      	   <div class="gallery">
+          	 <img src="static/recommender/images/default-image.jpg" alt="Cinque Terre" width="600" height="400">
+        		 <div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+      	   </div>
+	     {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
 {% else %}
 	<p>This is printed</p>
 {% endif %}
 
 {% endblock %}
+</body>
+</html>

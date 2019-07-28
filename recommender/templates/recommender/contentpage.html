@@ -1,20 +1,62 @@
+<html>
+<head>
+<style>
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 200px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+  width: 160px;
+  height: 100px;
+}
+a {
+	text-decoration: none;
+	color: black;
+}
+</style>
+</head>
+<body>
+	<h2><a href="{% url 'index' %}">Home</a></h2>
 {% if newsTopic %}
-	<h2>{{ newsTopic }}</h2><br/>
+	<h2>{{ newsTopic }}</h2>
 {% endif %}
 {% if newsContent %}
 	<p>{{ newsContent }}</p>
 {% endif %}
 
-<h1>Recommended News:</h1><br/><br/>
+<h1>Personalized Recommended News:</h1><br/>
 {% if recommendations %}
 	{% for newsItem in recommendations %}
-		<li><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></li>
+		<div class="gallery">
+			{% load static %}
+	    	<img src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
+	  		<div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+		</div>
 	{% endfor %}
-{% else %}
-	<p>This is printed</p>
 {% endif %}
-{% if maxCategory %}
-	<p>{{ maxCategory }}</p>
-{% else %}
-	<p>There is nothing!!</p>
+
+{% if recommendations2 %}
+	{% for newsItem in recommendations2 %}
+		<div class="gallery">
+			{% load static %}
+	    	<img src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
+	  		<div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+		</div>
+	{% endfor %}
 {% endif %}
+</body>
+</html>

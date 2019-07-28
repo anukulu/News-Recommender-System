@@ -3,14 +3,16 @@ import numpy as np
 import h5py
 import operator
 import time
+import random
 
 countTable = np.zeros((10,10), dtype=int)
 controlVar = None
-news = open("recommender/content.txt", 'r').read().split("----------")
-topics = open("recommender/topics.txt", 'r').read().split("\n")
+news = open("recommender/content.txt", encoding="UTF-8").read().split("----------")
+topics = open("recommender/topics.txt", encoding="UTF-8").read().split("\n")
+previousControlVarStore = None
 
 #######
-categories = open("recommender/categories.txt", "r").read().split("\n")
+categories = open("recommender/categories.txt", 'r').read().split("\n")
 categories1 = list(set(categories))
 systemTime = time.time()
 categoryAndTempClicks = {}
@@ -31,18 +33,48 @@ def index(request):
 	global news
 	global topics
 	global categories
+	categories2 = open("recommender/categories.txt", 'r').read().split("\n")
+	setOfCategories = list(set(categories))
+	random.shuffle(setOfCategories)
+
+	# i = 0
+	catego = []
+	newsAndTopics = []
+	newsAndTopics2 = {}
+	for cat in setOfCategories:
+		templist = []
+		for ctgry in categories2:
+			if(ctgry == cat):
+				indx = categories2.index(ctgry)
+				templist.append(indx)
+				categories2[indx] = "ThisIsTheReplacementText"
+		catego.append(templist)
 
 	i = 0
-	newsAndTopics = []
-	for topic in topics:
-		newsAndTopics.append(News(topic, news[i], i, categories[i])) 
+	for categ in catego:
+		j = 0 
+		random.shuffle(categ)
+		newsAndTopics = []
+		for indx in categ:
+			if(j < 5):
+				newsAndTopics.append(News(topics[indx], news[indx], indx, categories[indx]))
+				j = j + 1
+		newsAndTopics2[setOfCategories[i]] = newsAndTopics
 		i = i + 1
-	return render(request, "recommender/index.html", {'newsAndTopics' : newsAndTopics})
+
+	# for topic in topics:
+	# 	if (topic != ""):
+	# 		newsAndTopics.append(News(topic, news[i], i, categories[i])) 
+	# 		i = i + 1
+	return render(request, "recommender/index.html", {'newsAndTopics2' : newsAndTopics2})
 
 def content(request, category, newsId):
 	global controlVar
 	global news
 	global topics
+	global previousControlVarStore
+	categories3 = open("recommender/categories.txt", 'r').read().split("\n")
+	recommendations2 = []
 
 	#####
 	global categories
@@ -53,19 +85,21 @@ def content(request, category, newsId):
 		categoryAndTempClicks[category] = int(defaultValue)
 	else:
 		currentValue = str(int(request.COOKIES.get(category)) + 1)
+		# print(category)
 		categoryAndTempClicks[category] = (categoryAndTempClicks[category] + 1)
 
 	maxCategory = GetMaxCategory(request)
+
 	#####
 
 	recommendations = []
 	columnIndices = []
-	previousControlVarStore = open("recommender/control.txt", "w").write(str(controlVar))
+	previousControlVarStore = str(controlVar)
 	controlVar = newsId
-	previousControlVar = open("recommender/control.txt", 'r').read()
+	categories3[controlVar] = "ThisIsTheReplacementText"
 
-	if(previousControlVar != "None"):
-		prevControl = int(previousControlVar)
+	if(previousControlVarStore != "None"):
+		prevControl = int(previousControlVarStore)
 		with h5py.File('recommender/countTable.h5', 'r') as hf:
 			data = hf['countDataset'][:]
 			data[prevControl][controlVar] += 1
@@ -87,11 +121,46 @@ def content(request, category, newsId):
 			for column in columnIndices:
 				if(column != controlVar):
 					recommendations.append(News(topics[column], news[column], column, categories[column]))
+					categories3[column] = "ThisIsTheReplacementText"
 		with h5py.File('recommender/countTable.h5', 'w') as hf:
 			hf.create_dataset("countDataset",  data=data)
 	newsContent = news[newsId]
 	newsTopic = topics[newsId]
-	response =  render(request, "recommender/contentpage.html",  {'newsTopic': newsTopic, 'newsContent' : newsContent, 'recommendations': recommendations, 'maxCategory' : maxCategory})
+	
+	numberOfRecommendations = 10
+	i = 0
+	newsIndex = []
+	for ctgry in categories3:
+		if (i <= int(0.4 * numberOfRecommendations)):
+			if ctgry == maxCategory:
+				print("This is executed")
+				indx = categories3.index(ctgry)
+				newsIndex.append(indx)
+				categories3[indx] = "ThisIsTheReplacementText"
+				i = i + 1
+		elif (int(0.4 * numberOfRecommendations) < i and i <= (0.6 * numberOfRecommendations)):
+			if(ctgry == category):
+				indx = categories3.index(ctgry)
+				newsIndex.append(indx)
+				categories3[indx] = "ThisIsTheReplacementText"
+				i = i + 1
+		elif ((0.6 * numberOfRecommendations) and i <= numberOfRecommendations):
+			if(ctgry != category and ctgry != maxCategory):
+				indx = categories3.index(ctgry)
+				newsIndex.append(indx)
+				categories3[indx] = "ThisIsTheReplacementText"
+				i = i + 1
+		else:
+			break
+
+	random.shuffle(newsIndex)
+
+	for indx in newsIndex:
+		newS = News(topics[indx], news[indx], indx, categories[indx])
+		if(newS not in recommendations):
+			recommendations2.append(newS)
+
+	response =  render(request, "recommender/contentpage.html",  {'newsTopic': newsTopic, 'newsContent' : newsContent, 'recommendations': recommendations, 'recommendations2' : recommendations2})
 	response.set_cookie(category, currentValue)
 	return response
 
