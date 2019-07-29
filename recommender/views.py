@@ -127,7 +127,7 @@ def content(request, category, newsId):
 	newsContent = news[newsId]
 	newsTopic = topics[newsId]
 	
-	numberOfRecommendations = 10
+	numberOfRecommendations = 10 - len(recommendations)
 	i = 0
 	newsIndex = []
 	for ctgry in categories3:
@@ -153,6 +153,7 @@ def content(request, category, newsId):
 		else:
 			break
 
+	print(newsIndex)
 	random.shuffle(newsIndex)
 
 	for indx in newsIndex:

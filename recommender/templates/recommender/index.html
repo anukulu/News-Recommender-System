@@ -21,7 +21,7 @@ div.desc {
   padding: 15px;
   text-align: center;
   width: 160px;
-  height: 100px;
+  height: 150px;
 }
 a {
 	text-decoration: none;
@@ -34,30 +34,47 @@ a {
     /*float: left;*/
 }
 </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 </head>
 <body>
-	<h2><a href="{% url 'index' %}">Home</a></h2>
-	<h1>Personalized News Recommendation System</h1>
+  <!-- Image and text -->
+<nav class="navbar navbar-light bg-dark">
+    <a class = "navbar-brand text-light" href="{% url 'index' %}">
+    Home</a>
+</nav>
+  <div class = "container">
+    <h1 class="mt-4 text-success">Personalized News Recommendation System</h1>
 {% block content %}
 {% if newsAndTopics2 %}
-	{% for category, allNews in newsAndTopics2.items %}
+  {% for category, allNews in newsAndTopics2.items %}
+    <div class="card mb-4 mt-4">
     <div class="some">
-      <h3>{{ category }}</h3>
+      <div class="card-header">
+      <h3 class="text-uppercase">{{ category }}</h3>
+      </div>
+      <div class="card-body">
       <div class="{{ category }}" style="width: 100%; background-color: black; ">
         {% for newsItem in allNews %}
     
-      	   <div class="gallery">
-          	 <img src="static/recommender/images/default-image.jpg" alt="Cinque Terre" width="600" height="400">
-        		 <div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
-      	   </div>
-	     {% endfor %}
+           <div class="gallery">
+             <img src="static/recommender/images/default-image.jpg" alt="Cinque Terre" width="600" height="400">
+             <div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+           </div>
+       {% endfor %}
       </div>
+    </div>
+    </div>
     </div>
   {% endfor %}
 {% else %}
-	<p>This is printed</p>
+  <p>This is printed</p>
 {% endif %}
 
 {% endblock %}
+  </div>
+	
 </body>
 </html>

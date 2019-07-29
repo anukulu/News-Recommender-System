@@ -5,6 +5,7 @@ div.gallery {
   margin: 5px;
   border: 1px solid #ccc;
   float: left;
+  height:275px;
   width: 200px;
 }
 
@@ -18,33 +19,43 @@ div.gallery img {
 }
 
 div.desc {
-  padding: 15px;
-  text-align: center;
-  width: 160px;
-  height: 100px;
+  padding: 15px 8px;
+
 }
 a {
 	text-decoration: none;
 	color: black;
 }
 </style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 </head>
 <body>
-	<h2><a href="{% url 'index' %}">Home</a></h2>
-{% if newsTopic %}
-	<h2>{{ newsTopic }}</h2>
-{% endif %}
-{% if newsContent %}
-	<p>{{ newsContent }}</p>
-{% endif %}
-
-<h1>Personalized Recommended News:</h1><br/>
+<div class="navbar navbar-light bg-dark"><h2><a class="navbar-brand text-light" href="{% url 'index' %}">Home</a></h2></div>
+<div class="container">
+<div class="card mt-4 mb-4">
+	<div class="card-header">
+		{% if newsTopic %}
+			<h2>{{ newsTopic }}</h2>
+		{% endif %}
+	</div>
+	<div class="card-body text-justify">
+		{% if newsContent %}
+			<p>{{ newsContent }}</p>
+		{% endif %}
+	</div>
+<div class="card-header">
+<h2>Personalized Recommended News:</h2>
+</div>
+<div class="image-gallery">
 {% if recommendations %}
 	{% for newsItem in recommendations %}
 		<div class="gallery">
 			{% load static %}
-	    	<img src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
-	  		<div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+	    	<img class = "thumbnail" src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
+	  		<div class="desc text-center"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
 		</div>
 	{% endfor %}
 {% endif %}
@@ -53,10 +64,13 @@ a {
 	{% for newsItem in recommendations2 %}
 		<div class="gallery">
 			{% load static %}
-	    	<img src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
-	  		<div class="desc"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
+	    	<img class = "thumbnail" src="{% static 'recommender/images/default-image.jpg' %}" alt="Cinque Terre" width="600" height="400">
+	  		<div class="desc text-center"><a href="{% url 'contentPage' newsItem.category newsItem.index %}">{{ newsItem.topic }}</a></div>
 		</div>
 	{% endfor %}
 {% endif %}
+</div>
+</div>
+</div>
 </body>
 </html>

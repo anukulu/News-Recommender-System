@@ -60,6 +60,6 @@ def detection(request):
 		output = classifier.predict(vectorizer.transform(news))
 
 
-		op = (output[0]+" ")*3+"!!!"
+		op = (output[0])
 
 	return render(request, "FakeNews/detector.html", context= {'text' : op, 'text2': sentences})

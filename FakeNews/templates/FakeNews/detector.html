@@ -1,7 +1,7 @@
 <html>
 <head>
 	<style type="text/css">
-#summary, #words{
+#summary, {
  background:white;
  width: 300px;
  height: 50px;
@@ -11,22 +11,37 @@
  border: solid 3px #ddd;
 }
 </style>
-	<title></title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+	<title>FakeNews</title>
 </head>
 <body>
-	<h1>Please enter the news that you want to detect on the textarea below.</h1>
-	<br><br>
-
-	<form method="post" enctype="multipart/form-data" action="{% url 'detector' %}">
-		{% csrf_token %}
-		<textarea name="nepaliWords" rows="20" cols="100">{{ text2 }}</textarea><br/>
-		<button type="submit">ENTER</button>
-	</form>
-
+	<div class="container">
+	<div class="card">
+	<div class="card-header">
+	<h2>Please enter the news that you want to detect on the textarea below.</h2>
+	</div>
+	<div class="card-body">
 	{% if text|length %}
-		<textarea id= "words" rows="10" cols="15" style="background-color: #FFFFFF">{{ text }}</textarea>
-	{% else %}
-		<textarea id= "summary" rows="10" cols="15" disabled>Your result will be shown here.</textarea>
+		{% if text == "FAKE" %}
+		<div class="alert alert-danger" role="alert" id="words">The news is fake.</div>
+		{% else %}
+		<div class="alert alert-success" role = "alert" id= "words">The news is real.</div>
+		{% endif %}
 	{% endif %}
+	<form class = "form" method="post" enctype="multipart/form-data" action="{% url 'detector' %}">
+		{% csrf_token %}
+		<div class="form-group">
+		<textarea class="form-control" name="nepaliWords" rows="20" cols="100">{{ text2 }}</textarea><br/>
+		<div class="d-flex justify-content-center">
+			<button class="btn btn-primary btn-lg" type="submit">Enter</button>
+		</div>
+		</div>
+	</form>
+	</div>
+</div>
+</div>
 </body>
 </html>
